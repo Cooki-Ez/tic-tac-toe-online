@@ -1,14 +1,16 @@
-import {SYMBOL_X, SYMBOL_O} from "./constants";
+import {GAME_SYMBOLS} from "./constants";
+import {CrossIcon} from "./icons/cross-icon";
+import {SquareIcon} from "./icons/square-icon";
+import {TriangleIcon} from "./icons/triangle-icon";
+import {ZeroIcon} from "./icons/zero-icon";
 
-export function GameSymbol({symbol}) {
-  const getSymbolClassName = (symbol) => {
-    if (symbol === SYMBOL_O)
-      return "text-red-500";
-    if (symbol === SYMBOL_X)
-      return "text-green-500";
-    return "";
-  }
-  return (
-    <span className={`text-xl leading-6 ${getSymbolClassName(symbol)}`}>{symbol}</span>
-  )
+export function GameSymbol({symbol, className}) {
+  const Icon = {
+    [GAME_SYMBOLS.CROSS]: CrossIcon,
+    [GAME_SYMBOLS.ZERO]: ZeroIcon,
+    [GAME_SYMBOLS.TRIANGLE]: TriangleIcon,
+    [GAME_SYMBOLS.SQUARE]: SquareIcon
+  }[symbol] ?? CrossIcon;
+
+  return <Icon className={className} />
 }

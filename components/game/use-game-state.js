@@ -1,67 +1,39 @@
-import { SYMBOL_O, SYMBOL_X} from "./constants";
-import { useState } from 'react';
+import {GAME_SYMBOLS, TURN_ORDER} from "./constants";
+import {useState} from "react";
 
-const computeWinner = (cells) => {
-  const lines = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6]
-  ];
-
-  for (let i = 0; i < lines.length; i++) {
-    const [a, b, c] = lines[i];
-    if (cells[a] &&
-      cells[a] === cells[b] &&
-      cells[a] === cells[c])
-      return [a, b, c];
-  }
+function getNextTurn(currentTurn) {
+  const nextTurnIndex = TURN_ORDER.indexOf(currentTurn) + 1;
+  return TURN_ORDER[nextTurnIndex] ?? TURN_ORDER[0];
 }
 
-export function useGameState(){
-  const [cells, setCells] = useState([
-    null, null, null,
-    null, null, null,
-    null, null, null
-  ]);
-
-  const [currentStep, setCurrentStep] = useState(SYMBOL_O);
-  const [winnerSequence, setWinnerSequence] = useState();
+export function useGameState() {
+  const [{cells, currentTurn}, setGameState] = useState(() => (
+    {
+      cells: new Array(19 * 19).fill(null),
+      currentTurn: GAME_SYMBOLS.CROSS
+    }
+  ));
+  const nextTurn = getNextTurn(currentTurn);
 
   const handleCellClick = (index) => {
-    if (cells[index] || winnerSequence)
-      return;
+    setGameState((lastGameState) => {
+      if (lastGameState.cells[index])
+        return lastGameState;
 
-    const cellsCopy = cells.slice();
-    cellsCopy[index] = currentStep;
-
-    const winner = computeWinner(cellsCopy);
-
-    setWinnerSequence(winner);
-    setCells(cellsCopy);
-    setCurrentStep(currentStep === SYMBOL_O ? SYMBOL_X : SYMBOL_O);
+      return {
+        ...lastGameState,
+        currentTurn: getNextTurn(lastGameState.currentTurn),
+        cells: lastGameState.cells.map((cell, i) =>
+          i === index ? lastGameState.currentTurn : cell
+        ),
+      }
+    })
   }
 
-  const handleResetClick = () => {
-    const newCells = cells.map(() => null);
-    setCells(newCells);
-    setWinnerSequence();
-  }
-
-  const winnerSymbol = winnerSequence ? cells[winnerSequence[0]] : undefined;
-  const isTie = !cells.includes(null) && !winnerSequence;
-
-  return{
+  return {
     cells,
-    currentStep,
-    winnerSequence,
-    handleCellClick,
-    handleResetClick,
-    winnerSymbol,
-    isTie
-  }
+    currentTurn,
+    nextTurn,
+    handleCellClick
+  };
 }
