@@ -4,9 +4,9 @@ import {GameSymbol} from "./game-symbol";
 import {useGameState} from "./use-game-state";
 
 
-export function GameField({className}) {
+export function GameField({className, playersCount}) {
 
-  const {cells, currentTurn, nextTurn, handleCellClick} = useGameState();
+  const {cells, currentTurn, nextTurn, handleCellClick} = useGameState(playersCount);
 
   const actions = (
     <>

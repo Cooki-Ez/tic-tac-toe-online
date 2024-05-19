@@ -1,11 +1,8 @@
 import Image from "next/image";
 import logoSrc from "./logo.svg";
-import {Inter} from "next/font/google";
 import {Profile} from "../profile";
 import {ArrowDownIcon} from "./icons/arrow-down-icon";
 import {UiButton} from "../game/uikit/ui-button";
-
-const inter = Inter({subsets: ["latin"]});
 
 export function Header() {
   return (
@@ -14,7 +11,7 @@ export function Header() {
       <div className="w-px h-8 bg-slate-200 mx-6"/>
       <UiButton children="Play" className="w-44" variant="primary" size="lg" />
       <button className="ml-auto flex items-center gap-2 text-teal-600">
-        <Profile />
+        <Profile name="RUINER1337" rating="1337"/>
         <ArrowDownIcon />
       </button>
     </header>

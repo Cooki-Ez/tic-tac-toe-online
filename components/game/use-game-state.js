@@ -1,19 +1,22 @@
 import {GAME_SYMBOLS, TURN_ORDER} from "./constants";
 import {useState} from "react";
 
-function getNextTurn(currentTurn) {
-  const nextTurnIndex = TURN_ORDER.indexOf(currentTurn) + 1;
-  return TURN_ORDER[nextTurnIndex] ?? TURN_ORDER[0];
+function getNextTurn(currentTurn, playersCount) {
+
+  const slicedTurnOrder = TURN_ORDER.slice(0, playersCount);
+
+  const nextTurnIndex = slicedTurnOrder.indexOf(currentTurn) + 1;
+  return slicedTurnOrder[nextTurnIndex] ?? slicedTurnOrder[0];
 }
 
-export function useGameState() {
+export function useGameState(playersCount) {
   const [{cells, currentTurn}, setGameState] = useState(() => (
     {
       cells: new Array(19 * 19).fill(null),
       currentTurn: GAME_SYMBOLS.CROSS
     }
   ));
-  const nextTurn = getNextTurn(currentTurn);
+  const nextTurn = getNextTurn(currentTurn, playersCount);
 
   const handleCellClick = (index) => {
     setGameState((lastGameState) => {
@@ -22,7 +25,7 @@ export function useGameState() {
 
       return {
         ...lastGameState,
-        currentTurn: getNextTurn(lastGameState.currentTurn),
+        currentTurn: getNextTurn(lastGameState.currentTurn, playersCount),
         cells: lastGameState.cells.map((cell, i) =>
           i === index ? lastGameState.currentTurn : cell
         ),
