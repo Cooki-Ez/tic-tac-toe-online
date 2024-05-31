@@ -1,13 +1,6 @@
 import {GAME_SYMBOLS, TURN_ORDER} from "./constants";
 import {useState} from "react";
-
-function getNextTurn(currentTurn, playersCount) {
-
-  const slicedTurnOrder = TURN_ORDER.slice(0, playersCount);
-
-  const nextTurnIndex = slicedTurnOrder.indexOf(currentTurn) + 1;
-  return slicedTurnOrder[nextTurnIndex] ?? slicedTurnOrder[0];
-}
+import {computeWinner, getNextTurn} from "./model";
 
 export function useGameState(playersCount) {
   const [{cells, currentTurn}, setGameState] = useState(() => (
@@ -16,6 +9,9 @@ export function useGameState(playersCount) {
       currentTurn: GAME_SYMBOLS.CROSS
     }
   ));
+
+  const winnerSequence = computeWinner(cells);
+
   const nextTurn = getNextTurn(currentTurn, playersCount);
 
   const handleCellClick = (index) => {
@@ -37,6 +33,7 @@ export function useGameState(playersCount) {
     cells,
     currentTurn,
     nextTurn,
-    handleCellClick
+    handleCellClick,
+    winnerSequence,
   };
 }

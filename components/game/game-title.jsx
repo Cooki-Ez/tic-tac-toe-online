@@ -18,7 +18,7 @@ export function GameTitle({playersCount}) {
         {playersCount}
       </div>
       <div className="flex items-center gap-1">
-        <HistoryIcon /> 1 min to turn
+        <HistoryIcon /> 1 min to make a move
       </div>
 
     </div>
