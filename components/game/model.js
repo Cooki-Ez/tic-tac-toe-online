@@ -1,8 +1,10 @@
 import {TURN_ORDER} from "./constants";
 
-export function getNextTurn(currentTurn, playersCount) {
-
-  const slicedTurnOrder = TURN_ORDER.slice(0, playersCount);
+export function getNextTurn(currentTurn, playersCount, playersTimeOver) {
+  const slicedTurnOrder =
+    TURN_ORDER.slice(0, playersCount).filter(
+      symbol => !playersTimeOver.includes(symbol)
+    );
 
   const nextTurnIndex = slicedTurnOrder.indexOf(currentTurn) + 1;
   return slicedTurnOrder[nextTurnIndex] ?? slicedTurnOrder[0];
@@ -34,6 +36,13 @@ export function computeWinner(cells, sequenceSize = 5, fieldSize = 19){
       res[1].push(fieldSize * (j - gap) + (j - gap) + i);
       res[2].push(-fieldSize * (j - gap) + (j - gap) + i);
       res[3].push(fieldSize * (j - gap) + i);
+    }
+
+    const x = i % fieldSize;
+    if(x < gap || x >= fieldSize - gap){
+      res.shift();
+      res.shift();
+      res.shift();
     }
 
     return res;
