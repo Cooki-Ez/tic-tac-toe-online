@@ -10,7 +10,7 @@ import {GameOverModel} from "./ui/game-over-model";
 import {GAME_STATE_ACTIONS, gameStateReducer, initGameState} from "./model/game-state-reducer";
 import {computeWinner} from "./model/compute-winner";
 import {getNextTurn} from "./model/get-next-turn";
-import {useReducer} from "react";
+import {useCallback, useMemo, useReducer} from "react";
 import {ComputeWinnerSymbol} from "./model/compute-winner-symbol";
 import {computePlayerTimer} from "./model/compute-player-timer";
 import {useInterval} from "../lib/timers";
@@ -22,20 +22,22 @@ export function Game() {
     gameStateReducer,
     {
       playersCount: PLAYERS_COUNT,
-      defaultTimer: 10_000,
+      defaultTimer: 60_000,
       currentTurnStart: Date.now()
     },
     initGameState
   );
 
-  useInterval(1000, gameState.currentTurnStart, () => {
-    dispatch({
-      type: GAME_STATE_ACTIONS.TICK,
-      now: Date.now(),
-    });
-  })
+  useInterval(100, !!gameState.currentTurnStart,
+    useCallback(() => {
+      dispatch({
+        type: GAME_STATE_ACTIONS.TICK,
+        now: Date.now(),
+      });
+    }, [])
+  );
 
-  const winnerSequence = computeWinner(gameState);
+  const winnerSequence = useMemo(() => computeWinner(gameState), [gameState]);
   const nextTurn = getNextTurn(gameState);
   const winnerSymbol = ComputeWinnerSymbol(
     gameState,
@@ -47,6 +49,14 @@ export function Game() {
   const winnerPlayer = PLAYERS.find(player => player.symbol === winnerSymbol);
 
   const {cells, currentTurn} = gameState;
+
+  const handleCellClick = useCallback((index) => {
+    dispatch({
+      type: GAME_STATE_ACTIONS.CELL_CLICK,
+      index,
+      now: Date.now(),
+    });
+  }, []);
 
   return (
     <>
@@ -88,15 +98,10 @@ export function Game() {
         gameCells={cells.map((cell, index) => (
           <GameCell
             key={index}
+            index={index}
             disabled={!!winnerSymbol}
             isWinner={winnerSequence?.includes(index)}
-            onClick={() => {
-              dispatch({
-                type: GAME_STATE_ACTIONS.CELL_CLICK,
-                index,
-                now: Date.now(),
-              });
-            }}
+            onClick={handleCellClick}
             symbol={cell}
           />
         ))}

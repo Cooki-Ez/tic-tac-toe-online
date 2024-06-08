@@ -1,4 +1,4 @@
-import {GameSymbol} from "../../game/game-symbol";
+import {GameSymbol} from "./game-symbol";
 
 export function GameMoveInfo({actions, currentTurn, nextTurn}) {
   return (
