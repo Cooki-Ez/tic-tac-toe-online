@@ -1,10 +1,24 @@
 import {Header} from "../components/header";
-import {Game} from "../components/game-new";
+import {UiTextField} from "../components/uikit/fields/ui-text-field";
+import {UiSelectField} from "../components/uikit/fields/ui-select-field";
 
 export default function HomePage() {
   return (
-    <HomePageLayout header={<Header />}>
-      <Game />
+    <HomePageLayout header={<Header/>}>
+      <UiTextField
+        label="Select"
+        placeholder={"Placeholder"}
+        required
+        helperText="Helper text"
+        errorText="Error text"
+      />
+
+      <UiSelectField
+        label="Select"
+        required
+        helperText="Helper text"
+        errorText="Error text"
+      />
     </HomePageLayout>
   );
 }

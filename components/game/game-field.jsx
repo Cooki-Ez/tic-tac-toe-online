@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import {UiButton} from "./uikit/ui-button";
+import {UiButton} from "../uikit/ui-button";
 import {GameSymbol} from "./game-symbol";
 
 

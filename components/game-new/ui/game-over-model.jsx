@@ -1,5 +1,5 @@
-import {UiModel} from "../../game/uikit/ui-model";
-import {UiButton} from "../../game/uikit/ui-button";
+import {UiModel} from "../../uikit/ui-model";
+import {UiButton} from "../../uikit/ui-button";
 
 export function GameOverModel({winnerName, players}) {
   return (
